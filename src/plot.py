@@ -1,6 +1,8 @@
 from pathlib import Path
+from matplotlib.lines import Line2D
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import pandas as pd
 
 
@@ -12,40 +14,98 @@ OUTPUT_PATH = PROJECT_ROOT / "outputs" / "probability_scale.png"
 
 def main() -> None:
     df = pd.read_csv(INPUT_PATH)
-    df = df.sort_values("probability", ascending=True).reset_index(drop=True)
 
-    df["one_in_n"] = (1 / df["probability"]).round().astype(int)
-    df["label"] = df.apply(
-        lambda row: f"{row['event']}  ·  about 1 in {row['one_in_n']}",
-        axis=1,
-    )
+    order = [
+        "Drunk-driver accident share",
+        "Fatal accident risk",
+        "Fatality risk in drunk-driver accidents",
+        "Fatal drunk-driver accident share",
+    ]
 
-    fig, ax = plt.subplots(figsize=(11, 5))
+    df["event"] = pd.Categorical(df["event"], categories=order, ordered=True)
+    df = df.sort_values(["event", "period"]).reset_index(drop=True)
 
-    y_positions = range(len(df))
+    fig, ax = plt.subplots(figsize=(12, 7))
 
-    ax.hlines(
-        y=y_positions,
-        xmin=df["probability"].min() / 1.5,
-        xmax=df["probability"],
-        linewidth=2,
-        alpha=0.5,
-    )
+    y_positions = []
+    y_labels = []
 
-    ax.scatter(df["probability"], y_positions, s=90, zorder=3)
+    period_colors = {
+        "2000–2004": "gray",
+        "2020–2024": "navy",
+    }
 
-    ax.set_xscale("log")
+    for group_index, event_name in enumerate(order):
+        group = df[df["event"] == event_name]
+        base_y = group_index * 4
+
+        for offset, (_, row) in enumerate(group.iterrows()):
+            y = base_y + offset
+            y_positions.append(y)
+
+            one_in_n = round(1 / row["probability"])
+            y_labels.append(
+                f"{event_name}\n{row['period']} · about 1 in {one_in_n}"
+            )
+
+            color = period_colors.get(row["period"], "black")
+
+            ax.hlines(
+                y=y,
+                xmin=0,
+                xmax=row["probability"],
+                linewidth=2,
+                alpha=0.35,
+                color=color,
+            )
+
+            ax.scatter(
+                row["probability"],
+                y,
+                s=90,
+                zorder=3,
+                color=color,
+            )
+
+    ax.set_xlim(0, 0.25)
+    ax.xaxis.set_major_formatter(mtick.PercentFormatter(1.0))
+
     ax.set_yticks(y_positions)
-    ax.set_yticklabels(df["label"])
+    ax.set_yticklabels(y_labels)
 
-    ax.set_xlabel("Probability, logarithmic scale")
-    ax.set_title("Probability Scale of Traffic Accident Risks", pad=16)
+    ax.set_xlabel("Probability (%)")
+    ax.set_title("How Traffic Accident Risks Changed in Estonia", pad=16)
 
-    ax.grid(axis="x", which="both", alpha=0.25)
+    ax.grid(axis="x", alpha=0.25)
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
+
+    legend_elements = [
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="",
+            markerfacecolor="gray",
+            color="gray",
+            label="2000–2004",
+            markersize=8,
+        ),
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="",
+            markerfacecolor="navy",
+            color="navy",
+            label="2020–2024",
+            markersize=8,
+        ),
+    ]
+
+    ax.legend(handles=legend_elements, loc="upper right", frameon=False)
 
     plt.tight_layout()
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)

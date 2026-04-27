@@ -1,6 +1,9 @@
-event,probability,source,calculation
-A traffic accident involves a drunk driver,0.06321839080459771,"Statistics Estonia TS093, 2024",121.0 / 1914.0
-A traffic accident is fatal,0.03343782654127482,"Statistics Estonia TS093, 2024",64.0 / 1914.0
-A traffic accident is fatal and involves a drunk driver,0.00522466039707419,"Statistics Estonia TS093, 2024",10.0 / 1914.0
-Coin flip,0.5,Baseline reference,1/2
-A 1-in-100 event,0.01,Baseline reference,1/100
+event,period,probability,source,calculation
+Drunk-driver accident share,2000–2004,0.20943376836912958,Statistics Estonia TS093,drunk-driver accidents / all accidents
+Drunk-driver accident share,2020–2024,0.07722054380664653,Statistics Estonia TS093,drunk-driver accidents / all accidents
+Fatal accident risk,2000–2004,0.08714417839893125,Statistics Estonia TS093,fatal accidents / all accidents
+Fatal accident risk,2020–2024,0.031299093655589125,Statistics Estonia TS093,fatal accidents / all accidents
+Fatality risk in drunk-driver accidents,2000–2004,0.10647693817468105,Statistics Estonia TS093,fatal drunk-driver accidents / drunk-driver accidents
+Fatality risk in drunk-driver accidents,2020–2024,0.10172143974960876,Statistics Estonia TS093,fatal drunk-driver accidents / drunk-driver accidents
+Fatal drunk-driver accident share,2000–2004,0.022299866406330283,Statistics Estonia TS093,fatal drunk-driver accidents / all accidents
+Fatal drunk-driver accident share,2020–2024,0.00785498489425982,Statistics Estonia TS093,fatal drunk-driver accidents / all accidents

@@ -4,53 +4,110 @@ import pandas as pd
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 INPUT_PATH = PROJECT_ROOT / "data" / "raw" / "ts093_traffic_accidents.csv"
 OUTPUT_PATH = PROJECT_ROOT / "data" / "processed" / "probability_events.csv"
 
 
-def load_traffic_data() -> pd.DataFrame:
+ALL_ACCIDENTS = "Liiklusõnnetused"
+FATAL_ACCIDENTS = "Hukkunuga liiklusõnnetused"
+DRUNK_ACCIDENTS = "Liiklusõnnetused joobes mootorsõidukijuhi osalusel"
+FATAL_DRUNK_ACCIDENTS = (
+    "Hukkunuga liiklusõnnetused joobes mootorsõidukijuhi osalusel"
+)
+
+
+def load_data() -> pd.DataFrame:
     return pd.read_csv(INPUT_PATH)
 
 
-def calculate_2024_probabilities(df: pd.DataFrame) -> pd.DataFrame:
-    latest_year = 2024
+def get_period_metrics(
+    wide: pd.DataFrame,
+    start_year: int,
+    end_year: int,
+) -> dict[str, float]:
+    period = wide.loc[start_year:end_year]
 
-    year_data = df[df["Aasta"] == latest_year]
+    accidents = period[ALL_ACCIDENTS].sum()
+    fatal = period[FATAL_ACCIDENTS].sum()
+    drunk = period[DRUNK_ACCIDENTS].sum()
+    fatal_drunk = period[FATAL_DRUNK_ACCIDENTS].sum()
 
-    wide = year_data.pivot_table(
+    return {
+        "p_drunk": drunk / accidents,
+        "p_fatal": fatal / accidents,
+        "p_fatal_given_drunk": fatal_drunk / drunk,
+        "p_fatal_drunk": fatal_drunk / accidents,
+    }
+
+
+def calculate_probabilities(df: pd.DataFrame) -> pd.DataFrame:
+    wide = df.pivot_table(
         index="Aasta",
         columns="Näitaja",
         values="value",
         aggfunc="sum",
-    ).reset_index()
+    )
 
-    all_accidents = wide.loc[0, "Liiklusõnnetused"]
-    fatal_accidents = wide.loc[0, "Hukkunuga liiklusõnnetused"]
-    drunk_accidents = wide.loc[
-        0, "Liiklusõnnetused joobes mootorsõidukijuhi osalusel"
-    ]
-    fatal_drunk_accidents = wide.loc[
-        0, "Hukkunuga liiklusõnnetused joobes mootorsõidukijuhi osalusel"
-    ]
+    early_period = get_period_metrics(wide, 2000, 2004)
+    recent_period = get_period_metrics(wide, 2020, 2024)
 
     events = [
         {
-            "event": "A traffic accident involves a drunk driver",
-            "probability": drunk_accidents / all_accidents,
-            "source": "Statistics Estonia TS093, 2024",
-            "calculation": f"{drunk_accidents} / {all_accidents}",
+            "event": "Drunk-driver accident share",
+            "period": "2000–2004",
+            "probability": early_period["p_drunk"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "drunk-driver accidents / all accidents",
         },
         {
-            "event": "A traffic accident is fatal",
-            "probability": fatal_accidents / all_accidents,
-            "source": "Statistics Estonia TS093, 2024",
-            "calculation": f"{fatal_accidents} / {all_accidents}",
+            "event": "Drunk-driver accident share",
+            "period": "2020–2024",
+            "probability": recent_period["p_drunk"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "drunk-driver accidents / all accidents",
         },
         {
-            "event": "A traffic accident is fatal and involves a drunk driver",
-            "probability": fatal_drunk_accidents / all_accidents,
-            "source": "Statistics Estonia TS093, 2024",
-            "calculation": f"{fatal_drunk_accidents} / {all_accidents}",
+            "event": "Fatal accident risk",
+            "period": "2000–2004",
+            "probability": early_period["p_fatal"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "fatal accidents / all accidents",
+        },
+        {
+            "event": "Fatal accident risk",
+            "period": "2020–2024",
+            "probability": recent_period["p_fatal"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "fatal accidents / all accidents",
+        },
+        {
+            "event": "Fatality risk in drunk-driver accidents",
+            "period": "2000–2004",
+            "probability": early_period["p_fatal_given_drunk"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "fatal drunk-driver accidents / drunk-driver accidents",
+        },
+        {
+            "event": "Fatality risk in drunk-driver accidents",
+            "period": "2020–2024",
+            "probability": recent_period["p_fatal_given_drunk"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "fatal drunk-driver accidents / drunk-driver accidents",
+        },
+        {
+            "event": "Fatal drunk-driver accident share",
+            "period": "2000–2004",
+            "probability": early_period["p_fatal_drunk"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "fatal drunk-driver accidents / all accidents",
+        },
+        {
+            "event": "Fatal drunk-driver accident share",
+            "period": "2020–2024",
+            "probability": recent_period["p_fatal_drunk"],
+            "source": "Statistics Estonia TS093",
+            "calculation": "fatal drunk-driver accidents / all accidents",
         },
     ]
 
@@ -60,12 +117,13 @@ def calculate_2024_probabilities(df: pd.DataFrame) -> pd.DataFrame:
 def main() -> None:
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    df = load_traffic_data()
-    probabilities = calculate_2024_probabilities(df)
-    probabilities.to_csv(OUTPUT_PATH, index=False)
+    df = load_data()
+    probabilities = calculate_probabilities(df)
 
     print(probabilities)
-    print(f"Saved probability events to {OUTPUT_PATH}")
+
+    probabilities.to_csv(OUTPUT_PATH, index=False)
+    print(f"Saved {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
