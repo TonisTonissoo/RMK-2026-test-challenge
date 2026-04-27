@@ -4,25 +4,27 @@ Test challenge submission for the RMK Data Team Internship 2026.
 
 ## Overview
 
-This project explores how to build intuition about probability by placing real-world events on a shared logarithmic probability scale.
+This project uses open data from Statistics Estonia to build an interpretable probability scale for traffic accident risks in Estonia and compare how these risks changed over time.
 
-Using open data from Statistics Estonia, I estimate probabilities for several traffic accident related events and compare them with simple baseline reference events.
+Instead of showing probabilities in isolation, the project places related risks on a shared scale and compares two five-year periods:
 
-The goal is not only to calculate probabilities, but to make them interpretable.
+- 2000–2004  
+- 2020–2024
+
+The goal is to make changes in risk intuitive and visible.
 
 ---
 
-## Events Included
+## Research Question
 
-Current probability scale includes:
+How have key traffic accident risks changed over time?
 
-| Event | Approximate Probability | Intuition |
-|------|--------------------------|-----------|
-| Coin flip | 0.50 | 1 in 2 |
-| Traffic accident involves a drunk driver | 0.063 | 1 in 16 |
-| Traffic accident is fatal | 0.033 | 1 in 30 |
-| A 1-in-100 reference event | 0.010 | 1 in 100 |
-| Traffic accident is fatal and involves a drunk driver | 0.005 | 1 in 191 |
+Specifically:
+
+- How much has the share of drunk-driver accidents changed?
+- How much has fatal accident risk changed?
+- Has the fatality risk within drunk-driver accidents changed?
+- How rare are fatal drunk-driver accidents overall?
 
 ---
 
@@ -31,7 +33,7 @@ Current probability scale includes:
 Primary data source:
 
 Statistics Estonia API  
-Table TS093 — Inimkannatanutega liiklusõnnetused teedel (kuud)
+Table TS093 — Inimkannatanutega liiklusõnnetused teedel
 
 API endpoint:
 
@@ -39,32 +41,96 @@ https://andmed.stat.ee/api/v1/et/stat/TS093
 
 Indicators used:
 
-- Traffic accidents
-- Fatal traffic accidents
-- Traffic accidents involving a drunk driver
-- Fatal traffic accidents involving a drunk driver
+- Traffic accidents  
+- Fatal traffic accidents  
+- Traffic accidents involving a drunk driver  
+- Fatal traffic accidents involving a drunk driver  
 
-Data extracted programmatically using Python and the Statistics Estonia API.
+Data is fetched programmatically using Python.
 
 ---
 
 ## Method
 
-Probabilities were calculated from 2024 event counts using simple frequency ratios.
+For each 5-year period, probabilities are estimated using event frequencies:
 
-Example:
+### 1. Drunk-driver accident share
 
-Probability that a traffic accident is fatal:
+P(drunk accident) = drunk accidents / all accidents
 
-P(fatal | accident) = fatal accidents / all accidents
+### 2. Fatal accident risk
 
-64 / 1914 ≈ 0.033
+P(fatal accident) = fatal accidents / all accidents
 
-Probability that a traffic accident involves a drunk driver:
+### 3. Fatality risk within drunk-driver accidents
 
-121 / 1914 ≈ 0.063
+P(fatal | drunk accident) = fatal drunk-driver accidents / drunk-driver accidents
 
-Events are visualized on a logarithmic probability scale.
+### 4. Fatal drunk-driver accident share
+
+P(fatal and drunk) = fatal drunk-driver accidents / all accidents
+
+These probabilities are plotted on a shared percentage scale.
+
+---
+
+## Results
+
+### Major changes observed
+
+### Drunk-driver accident share fell substantially
+
+- 2000–2004: about 1 in 5 accidents (~21%)
+- 2020–2024: about 1 in 13 accidents (~8%)
+
+This suggests a substantial reduction in alcohol-related accident involvement.
+
+---
+
+### Fatal accident risk improved strongly
+
+- 2000–2004: about 1 in 11 accidents were fatal
+- 2020–2024: about 1 in 32 accidents were fatal
+
+This is a large improvement in overall traffic safety.
+
+---
+
+### Fatal drunk-driver accidents became much rarer
+
+- 2000–2004: about 1 in 45 accidents
+- 2020–2024: about 1 in 127 accidents
+
+This dropped sharply.
+
+---
+
+### But fatality risk *within* drunk-driver accidents changed little
+
+- 2000–2004: about 1 in 9 drunk-driver accidents was fatal
+- 2020–2024: about 1 in 10
+
+This was surprisingly stable.
+
+Interpretation:
+
+While drunk-driving accidents became much less common, when such accidents occur, their severity remains high.
+
+
+---
+
+## Example Output
+
+Generated visualization comparing traffic accident risks across periods:
+
+![Probability Scale of Traffic Accident Risks](outputs/probability_scale.png)
+
+The figure shows:
+
+- Drunk-driver accident share declined substantially  
+- Overall fatal accident risk decreased strongly  
+- Fatal drunk-driver accidents became much rarer  
+- Fatality risk within drunk-driver accidents changed relatively little
 
 ---
 
@@ -74,7 +140,7 @@ Events are visualized on a logarithmic probability scale.
 data/
 ├── raw/
 │   └── ts093_traffic_accidents.csv
-│
+
 └── processed/
     └── probability_events.csv
 
@@ -117,25 +183,19 @@ python src/plot.py
 
 ---
 
-## Example Output
-
-Generated probability scale:
-
-`outputs/probability_scale.png`
-
----
-
 ## Assumptions and Limitations
 
-- Probabilities are estimated from aggregated event frequencies.
-- 2024 is used as a first approximation and may contain yearly variation.
-- Some baseline reference events (coin flip, 1-in-100 event) are included only to improve interpretability.
-- This is a probability intuition exercise, not a formal risk model.
+- Probabilities are estimated from aggregated frequencies.
+- 5-year windows are used to reduce year-to-year noise.
+- This is descriptive analysis, not causal inference.
+- Results reflect recorded accident outcomes, not exposure risk.
 
-Future improvement:
-- Use multi-year averages instead of a single year.
-- Add additional Estonian public datasets for broader comparisons.
-- Explore Bayesian or conditional probability extensions.
+Possible future extensions:
+
+- Add confidence intervals
+- Extend to additional time windows
+- Compare effect sizes explicitly (risk ratios)
+- Incorporate other public safety datasets
 
 ---
 
@@ -143,15 +203,8 @@ Future improvement:
 
 This solution prioritizes:
 
-- programmatic reproducibility  
+- reproducibility  
 - transparent assumptions  
-- interpretable visualization  
-- simple but extensible code
-
-The emphasis is on statistical intuition rather than complexity.
-
----
-
-## License
-
-MIT
+- interpretable probability communication  
+- simple statistical reasoning  
+- visual comparison of risk change over time
