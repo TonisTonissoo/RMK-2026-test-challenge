@@ -1,5 +1,9 @@
 # Probability Scale of Traffic Accident Risks in Estonia
 
+Most traffic risks in Estonia decreased by ~60% over the last two decades.
+
+**However, drunk-driving accidents remain just as deadly when they occur.**
+
 Test challenge submission for the RMK Data Team Internship 2026.
 
 ## Overview
@@ -76,46 +80,58 @@ These probabilities are plotted on a shared percentage scale.
 
 ## Results
 
-### Major changes observed
+The main pattern is clear:
 
-### Drunk-driver accident share fell substantially
+Most traffic risks in Estonia decreased by around 60% between 2000–2004 and 2020–2024.
 
-- 2000–2004: about 1 in 5 accidents (~21%)
-- 2020–2024: about 1 in 13 accidents (~8%)
-
-This suggests a substantial reduction in alcohol-related accident involvement.
+However, one risk did not meaningfully change:  
+**the fatality risk within drunk-driving accidents.**
 
 ---
 
-### Fatal accident risk improved strongly
+### What changed
 
-- 2000–2004: about 1 in 11 accidents were fatal
-- 2020–2024: about 1 in 32 accidents were fatal
+Several major risk reductions are visible when comparing 2000–2004 to 2020–2024:
 
-This is a large improvement in overall traffic safety.
+- **Drunk-driver accident share** fell from about 1 in 5 (~21%) to about 1 in 13 (~8%)  
+  → ↓ ~63%
+
+- **Fatal accident risk** fell from about 1 in 11 (~9%) to about 1 in 32 (~3%)  
+  → ↓ ~64%
+
+- **Fatal drunk-driver accident share** fell from about 1 in 45 (~2.2%) to about 1 in 127 (~0.8%)  
+  → ↓ ~65%
+
+These results indicate a substantial improvement in overall traffic safety and a reduction in alcohol-related accident involvement.
 
 ---
 
-### Fatal drunk-driver accidents became much rarer
+### What did *not* change
 
-- 2000–2004: about 1 in 45 accidents
-- 2020–2024: about 1 in 127 accidents
+One result stands out:
 
-This dropped sharply.
+- **Fatality risk within drunk-driver accidents** remained nearly unchanged  
+  (about 1 in 9 → about 1 in 10)
+
+This means:
+
+> While drunk-driving accidents became much less common, their severity did not improve.
 
 ---
 
-### But fatality risk *within* drunk-driver accidents changed little
+### Interpretation
 
-- 2000–2004: about 1 in 9 drunk-driver accidents was fatal
-- 2020–2024: about 1 in 10
+The results suggest two distinct effects:
 
-This was surprisingly stable.
+1. **Prevention improved**  
+   Fewer accidents involve drunk drivers, and fewer accidents are fatal overall.
 
-Interpretation:
+2. **Conditional risk remained high**  
+   Given that a drunk-driving accident occurs, the probability that it is fatal has not meaningfully decreased.
 
-While drunk-driving accidents became much less common, when such accidents occur, their severity remains high.
+In other words:
 
+> Estonia reduced how often dangerous situations occur — but not how dangerous they are when they do occur.
 
 ---
 
