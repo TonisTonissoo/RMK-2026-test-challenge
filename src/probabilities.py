@@ -120,6 +120,22 @@ def main() -> None:
     df = load_data()
     probabilities = calculate_probabilities(df)
 
+    pivot = probabilities.pivot(
+        index="event",
+        columns="period",
+        values="probability",
+    )
+
+    pivot["relative_change"] = (
+        pivot["2020–2024"] - pivot["2000–2004"]
+    ) / pivot["2000–2004"]
+
+    probabilities = probabilities.merge(
+        pivot["relative_change"],
+        left_on="event",
+        right_index=True,
+    )
+
     print(probabilities)
 
     probabilities.to_csv(OUTPUT_PATH, index=False)

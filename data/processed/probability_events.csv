@@ -1,9 +1,9 @@
-event,period,probability,source,calculation
-Drunk-driver accident share,2000–2004,0.20943376836912958,Statistics Estonia TS093,drunk-driver accidents / all accidents
-Drunk-driver accident share,2020–2024,0.07722054380664653,Statistics Estonia TS093,drunk-driver accidents / all accidents
-Fatal accident risk,2000–2004,0.08714417839893125,Statistics Estonia TS093,fatal accidents / all accidents
-Fatal accident risk,2020–2024,0.031299093655589125,Statistics Estonia TS093,fatal accidents / all accidents
-Fatality risk in drunk-driver accidents,2000–2004,0.10647693817468105,Statistics Estonia TS093,fatal drunk-driver accidents / drunk-driver accidents
-Fatality risk in drunk-driver accidents,2020–2024,0.10172143974960876,Statistics Estonia TS093,fatal drunk-driver accidents / drunk-driver accidents
-Fatal drunk-driver accident share,2000–2004,0.022299866406330283,Statistics Estonia TS093,fatal drunk-driver accidents / all accidents
-Fatal drunk-driver accident share,2020–2024,0.00785498489425982,Statistics Estonia TS093,fatal drunk-driver accidents / all accidents
+event,period,probability,source,calculation,relative_change
+Drunk-driver accident share,2000–2004,0.20943376836912958,Statistics Estonia TS093,drunk-driver accidents / all accidents,-0.6312889539830827
+Drunk-driver accident share,2020–2024,0.07722054380664653,Statistics Estonia TS093,drunk-driver accidents / all accidents,-0.6312889539830827
+Fatal accident risk,2000–2004,0.08714417839893125,Statistics Estonia TS093,fatal accidents / all accidents,-0.6408355184404035
+Fatal accident risk,2020–2024,0.031299093655589125,Statistics Estonia TS093,fatal accidents / all accidents,-0.6408355184404035
+Fatality risk in drunk-driver accidents,2000–2004,0.10647693817468105,Statistics Estonia TS093,fatal drunk-driver accidents / drunk-driver accidents,-0.04466223866496468
+Fatality risk in drunk-driver accidents,2020–2024,0.10172143974960876,Statistics Estonia TS093,fatal drunk-driver accidents / drunk-driver accidents,-0.04466223866496468
+Fatal drunk-driver accident share,2000–2004,0.022299866406330283,Statistics Estonia TS093,fatal drunk-driver accidents / all accidents,-0.647756414718699
+Fatal drunk-driver accident share,2020–2024,0.00785498489425982,Statistics Estonia TS093,fatal drunk-driver accidents / all accidents,-0.647756414718699
